@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="row mb-4">
+        <div class="col-md-6 mx-auto">
+            <form method="get" class="card card-body">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        {{ form.country.label_tag }}
+                        {{ form.country }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.category.label_tag }}
+                        {{ form.category }}
+                    </div>
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="bi bi-funnel"></i> Filter News
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if error_message %}
+        <div class="alert alert-danger" role="alert">
+            {{ error_message }}
+        </div>
+    {% endif %}
+
+    <div class="row">
+        {% for article in articles %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card news-card h-100">
+                {% if article.urlToImage %}
+                <img src="{{ article.urlToImage }}" class="card-img-top" alt="{{ article.title }}" style="height: 200px; object-fit: cover;">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ article.title }}</h5>
+                    <p class="card-text">{{ article.description|truncatechars:100 }}</p>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <small class="text-muted">
+                        {% if article.source.name %}
+                        <span class="badge bg-secondary">{{ article.source.name }}</span>
+                        {% endif %}
+                        <span class="ms-2">{{ article.publishedAt|date:"M d, Y" }}</span>
+                    </small>
+                    <a href="{{ article.url }}" target="_blank" class="btn btn-sm btn-outline-primary float-end">
+                        Read More <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <div class="alert alert-info">
+                No articles found. Please try different filters.
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock %}
